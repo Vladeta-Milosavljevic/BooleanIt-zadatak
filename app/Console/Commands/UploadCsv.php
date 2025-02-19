@@ -65,7 +65,6 @@ class UploadCsv extends Command
                 continue;
             };
 
-            // $categoryInDatabase = array_search($record['category_name'], $categories);
             $categoryInDatabase = $categories->search($record['category_name']);
             if (!$categoryInDatabase) {
                 // adding the new category in the database
@@ -80,6 +79,10 @@ class UploadCsv extends Command
             unset($record['category_name']);
             Product::create($record);
             $count++;
+
+            if (strpos((string) $count, '00') !== false) {
+                $this->info("Successfully imported {$count} records.");
+            }
         }
 
         $this->info("Successfully imported {$count} records.");

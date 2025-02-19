@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Csv;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CsvController extends Controller
@@ -26,7 +26,7 @@ class CsvController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Csv $csv)
+    public function show(Product $product)
     {
         //
     }
@@ -34,7 +34,7 @@ class CsvController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Csv $csv)
+    public function update(Request $request, Product $product)
     {
         //
     }
@@ -42,7 +42,7 @@ class CsvController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Csv $csv)
+    public function destroy(Product $product)
     {
         //
     }
