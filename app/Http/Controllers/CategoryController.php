@@ -20,19 +20,28 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $categoryUpdate = ['name' => $request->name];
+
+        // if category is not found
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
+
+        // validating the input
         $validator = Validator::make($categoryUpdate, [
             'name' => ['required', 'string', 'max:255', 'min:3'],
         ]);
+
+        // returning errors if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $validator->errors(),
             ], 400);
         };
+
+        // updating with new value
         $category->update($categoryUpdate);
+
         return response()->json($category);
     }
 
@@ -40,10 +49,13 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
+        // if category is not found
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
+
         $category->delete();
-        return response()->json(['message' => 'Category deleted successfully'], 204);
+        // confirming the delete
+        return response()->json(['message' => 'Category deleted successfully']);
     }
 }
