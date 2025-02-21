@@ -6,7 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Console\Command;
 use League\Csv\Writer;
-use SplTempFileObject;
+use Illuminate\Support\Facades\Storage;
 
 class CscCreateProductFileForSpecificCategory extends Command
 {
@@ -59,14 +59,18 @@ class CscCreateProductFileForSpecificCategory extends Command
         $date = now();
         $csvName = preg_replace("/[^A-Za-z0-9 ]/", '_', "{$categoryName}_{$date}");
         $csvName = str_replace(' ', '_', $csvName);
+        $csvName ="{$csvName}.csv";
         $this->info("The file name is {$csvName}");
 
         // create the csv file
-        $csv = Writer::createFromFileObject(new SplTempFileObject());
-        $csv = Writer::createFromPath("{$csvName}.csv",'w');
+        $this->info("Creating the file");
+        $csv = Writer::createFromPath("createdCSVs/{$csvName}",'w');
+        // insert the data
+        $this->info("Inserting the data");
         $csv->insertOne($csvHeader);
         $csv->insertAll($csvData);
-
+        $this->info("File is completed");
+        $this->info("File is located in the createdCSV folder inside the project and is named {$csvName}");
         exit;
 
     }
