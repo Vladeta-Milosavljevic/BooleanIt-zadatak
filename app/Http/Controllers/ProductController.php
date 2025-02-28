@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class ProductController extends Controller
 {
@@ -14,13 +16,22 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        // query builder is a faster option
+        $products = Db::table('products')->get();
+        // $products = Product::all();
         return response()->json($products);
     }
 
     public function productsPerCategory($id)
     {
-        $productsPerCategory = Category::with('product')->where('id', $id)->get();
+        // query builder is a faster option
+        $productsPerCategory = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.name as category_name')
+            ->where('category_id', $id)
+            ->get();
+
+        // $productsPerCategory = Category::with('product')->where('id', $id)->get();
         if (count($productsPerCategory) === 0) {
             return response()->json(['message' => 'Could not find products for this category'], 404);
         }
@@ -37,7 +48,7 @@ class ProductController extends Controller
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
         }
-        $category= Category::find($request->category_id);
+        $category = Category::find($request->category_id);
         // if category is not found
         if (!$category) {
             return response()->json(['message' => 'Category for the selected product not found'], 404);
@@ -57,15 +68,15 @@ class ProductController extends Controller
         ];
         // validating the input
         $validator = Validator::make($productUpdate, [
-            'product_number' => ['nullable','min:2'],
+            'product_number' => ['nullable', 'min:2'],
             'category_id' => 'required',
-            'deparment_name' => ['nullable','min:2'],
-            'manufacturer_name' => ['nullable','min:2'],
-            'upc' => ['nullable','min:2'],
-            'sku' => ['nullable','min:2'],
-            'regular_price' => ['nullable','min:2'],
-            'sale_price' => ['nullable','min:2'],
-            'description' => ['nullable','min:2'],
+            'deparment_name' => ['nullable', 'min:2'],
+            'manufacturer_name' => ['nullable', 'min:2'],
+            'upc' => ['nullable', 'min:2'],
+            'sku' => ['nullable', 'min:2'],
+            'regular_price' => ['nullable', 'min:2'],
+            'sale_price' => ['nullable', 'min:2'],
+            'description' => ['nullable', 'min:2'],
         ]);
 
         // returning errors if validation fails
@@ -89,6 +100,7 @@ class ProductController extends Controller
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
         }
+        // delete the product
         $product->delete();
         return response()->json(['message' => 'Product deleted successfully']);
     }

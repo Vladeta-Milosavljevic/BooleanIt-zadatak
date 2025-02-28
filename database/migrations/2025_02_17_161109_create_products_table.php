@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('sale_price');
             $table->text('description');
             $table->timestamps();
+            $table->unique('id','category_id');
         });
     }
 

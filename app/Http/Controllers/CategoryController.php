@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
 
     public function index()
     {
-        $categories = Category::all();
+        // query builder is a faster option
+        $categories = Db::table('categories')->get();
+        // $categories = Category::all();
         return response()->json($categories);
     }
 
@@ -53,9 +56,8 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
-
+        // delete the category
         $category->delete();
-        // confirming the delete
         return response()->json(['message' => 'Category deleted successfully']);
     }
 }
