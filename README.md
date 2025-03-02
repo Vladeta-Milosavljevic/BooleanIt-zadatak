@@ -44,6 +44,12 @@ php artisan key:generate --show
 php artisan serve
 ```
 
+
+* In the separate terminal run
+```
+php artisan queue:work
+```
+
 * Artisan command for taking data from Csv file (path towards the file must be inside the '')
 ```
 php artisan csv:upload {file}
