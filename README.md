@@ -57,5 +57,5 @@ php artisan csv:upload {file}
 
 * Artisan command for creating a Csv file with products for the specified category (id must be inside the '')
 ```
-php artisan create_product_list_for_category {id}
+php artisan csv:create_product_list_for_category {id}
 ```
